@@ -35,18 +35,10 @@ class APIClient private constructor() {
             })
         }
     }
-    val authentication = Authentication.getInstance()
+    val authentication = Authentication.instance
 
     companion object {
-        @Volatile
-        private var instance: APIClient? = null
-
-        fun getInstance(): APIClient {
-            if (instance == null) {
-                this.instance = APIClient()
-            }
-            return this.instance!!
-        }
+        val instance: APIClient by lazy { APIClient() }
     }
 
     suspend inline fun <reified Body, reified Result> post(baseUrl: Url? = null, path: String, body: Body? = null): Result {

@@ -6,24 +6,17 @@ import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.Url
+import io.ktor.utils.io.locks.synchronized
 import kotlin.concurrent.Volatile
 
 final class Authentication private constructor() {
 
     companion object {
-        @Volatile
-        private var instance: Authentication? = null
-
-        fun getInstance(): Authentication {
-            if (instance == null) {
-                this.instance = Authentication()
-            }
-            return this.instance!!
-        }
+        val instance: Authentication by lazy { Authentication() }
     }
 
     private val baseOAuthUrl = "https://todoist.com/oauth"
-    private val api = APIClient.getInstance()
+    private val api = APIClient.instance
     private val clientID = "19530b5a25ff4321ad889abc37bc7134"
 
     var accessToken: String? = null

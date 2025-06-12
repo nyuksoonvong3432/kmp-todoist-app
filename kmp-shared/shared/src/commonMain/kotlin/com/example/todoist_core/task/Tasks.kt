@@ -1,22 +1,15 @@
 package com.example.todoist_core.task
 
 import com.example.todoist_core.api.APIClient
+import com.example.todoist_core.auth.Authentication
 import kotlin.concurrent.Volatile
 
 class Tasks private constructor() {
     companion object {
-        @Volatile
-        private var instance: Tasks? = null
-
-        fun getInstance(): Tasks {
-            if (instance == null) {
-                this.instance = Tasks()
-            }
-            return this.instance!!
-        }
+        val instance: Tasks by lazy { Tasks() }
     }
 
-    private val api = APIClient.getInstance()
+    private val api = APIClient.instance
 
     suspend fun create(payload: TaskCreatePayloadDTO): TaskEntityDTO {
         return api.post(path = "/tasks", body = payload)
