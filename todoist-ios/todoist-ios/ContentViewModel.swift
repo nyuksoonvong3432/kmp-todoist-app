@@ -11,8 +11,8 @@ import TodoistCore
 extension ContentView {
     final class ViewModel: ObservableObject {
         
-        private let authService = Authentication.companion.getInstance()
-        private let taskService = Tasks.companion.getInstance()
+        private let authService = Authentication.companion.instance
+        private let taskService = Tasks.companion.instance
 
         @Published private(set) var tasks = [TaskEntityDTO]()
         

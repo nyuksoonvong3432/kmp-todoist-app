@@ -11,7 +11,7 @@ import TodoistCore
 extension FormView {
     final class ViewModel: ObservableObject {
         
-        private let taskService = Tasks.companion.getInstance()
+        private let taskService = Tasks.companion.instance
         
         @Published var content = "" {
             didSet {
