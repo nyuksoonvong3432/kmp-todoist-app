@@ -14,16 +14,24 @@ struct FormView: View {
     let onCreated: (TaskEntityDTO) -> Void
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             ScrollView {
                 VStack(spacing: 28) {
-                    VStack {
+                    VStack(alignment: .leading) {
                         Text("Content")
                         TextField("Content", text: $viewModel.content)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 52)
+                            .background(.gray.opacity(0.1))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
-                    VStack {
+                    VStack(alignment: .leading) {
                         Text("Description")
                         TextField("Description", text: $viewModel.description)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 52)
+                            .background(.gray.opacity(0.1))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                 }
             }
@@ -34,6 +42,8 @@ struct FormView: View {
             Button("Submit") {
                 submit()
             }.disabled(isLoading)
+            .frame(maxWidth: .infinity)
+            .buttonStyle(.borderedProminent)
         }.padding()
     }
     

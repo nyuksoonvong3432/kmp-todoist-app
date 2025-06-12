@@ -12,11 +12,13 @@ extension FormView {
     final class ViewModel: ObservableObject {
         @Published var content = "" {
             didSet {
+                guard self.error != nil else { return }
                 self.validate()
             }
         }
         @Published var description = "" {
             didSet {
+                guard self.error != nil else { return }
                 self.validate()
             }
         }

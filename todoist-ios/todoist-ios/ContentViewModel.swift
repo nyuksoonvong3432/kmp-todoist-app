@@ -18,6 +18,7 @@ extension ContentView {
             return AuthKoinHelper().getAuthorizationUrl()
         }
         
+        @MainActor
         func getTasks() async throws {
             self.tasks = try await TaskKoinHelper().getAll()
         }
@@ -26,6 +27,7 @@ extension ContentView {
             self.tasks.insert(task, at: 0)
         }
         
+        @MainActor
         func authenticate(clientSecret: String, code: String) async throws {
             try await AuthKoinHelper().authenticate(
                 clientSecret: clientSecret,

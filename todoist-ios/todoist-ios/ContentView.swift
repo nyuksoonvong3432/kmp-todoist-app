@@ -35,39 +35,44 @@ struct ContentView: View {
                     }
                 }
             }.padding()
-                .task {
-                    await loadData()
-                }
-                .alert(
-                    "Something went wrong.",
-                    isPresented: .init(
-                        get: { error != nil },
-                        set: { _ in error = nil }
-                    ),
-                    actions: {
-                        Button("OK") {
-                            error = nil
-                        }
-                    },
-                    message: {
-                        Text(error ?? "-")
+            .task {
+                await loadData()
+            }
+            .refreshable {
+                await loadData()
+            }
+            .alert(
+                "Something went wrong.",
+                isPresented: .init(
+                    get: { error != nil },
+                    set: { _ in error = nil }
+                ),
+                actions: {
+                    Button("OK") {
+                        error = nil
                     }
-                )
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
+                },
+                message: {
+                    Text(error ?? "-")
+                }
+            )
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    if viewModel.isLoggedIn {
                         Button("", systemImage: "plus.app.fill") {
                             self.showingCreateForm = true
-                        }.opacity(viewModel.isLoggedIn ? 1 : 0)
+                        }
                     }
                 }
-                .sheet(isPresented: $showingCreateForm) {
-                    FormView(
-                        onCreated: { created in
-                            viewModel.onTaskCreated(created)
-                            self.showingCreateForm = false
-                        }
-                    ).presentationDetents([.medium])
-                }
+            }
+            .sheet(isPresented: $showingCreateForm) {
+                FormView(
+                    onCreated: { created in
+                        viewModel.onTaskCreated(created)
+                        self.showingCreateForm = false
+                    }
+                ).presentationDetents([.medium])
+            }
         }.onOpenURL { url in
             self.handleDeeplink(url)
         }

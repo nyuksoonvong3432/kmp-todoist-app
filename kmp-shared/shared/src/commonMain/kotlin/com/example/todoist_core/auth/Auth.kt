@@ -25,7 +25,7 @@ class Authentication {
         private set
 
     fun getAuthorizationUrl(): Url {
-        return Url("$baseOAuthUrl/authorize?client_id=$clientID&scope=data:read,data:delete&state=asdasndakj")
+        return Url("$baseOAuthUrl/authorize?client_id=$clientID&scope=data:delete,data:read_write&state=asdasndakj")
     }
 
     @Throws(Throwable::class)
