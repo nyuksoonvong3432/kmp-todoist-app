@@ -22,16 +22,28 @@ struct FormView: View {
                         TextField("Content", text: $viewModel.content)
                             .frame(maxWidth: .infinity)
                             .frame(height: 52)
-                            .background(.gray.opacity(0.1))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .padding(.horizontal)
+                            .clipShape(
+                                RoundedRectangle(cornerRadius: 12.0)
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12.0)
+                                    .stroke(.white, lineWidth: 1.5)
+                            )
                     }
                     VStack(alignment: .leading) {
                         Text("Description")
                         TextField("Description", text: $viewModel.description)
                             .frame(maxWidth: .infinity)
                             .frame(height: 52)
-                            .background(.gray.opacity(0.1))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .padding(.horizontal)
+                            .clipShape(
+                                RoundedRectangle(cornerRadius: 12.0)
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12.0)
+                                    .stroke(.white, lineWidth: 1.5)
+                            )
                     }
                 }
             }

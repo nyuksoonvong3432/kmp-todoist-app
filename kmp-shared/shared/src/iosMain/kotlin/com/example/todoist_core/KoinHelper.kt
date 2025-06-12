@@ -36,6 +36,9 @@ class TaskKoinHelper : KoinComponent {
 class AuthKoinHelper : KoinComponent {
     private val authentication: Authentication by inject()
 
+    @Throws(Throwable::class)
+    suspend fun tryRestoreAccess() = authentication.tryRestoreAccess()
+
     fun getAuthorizationUrl(): IOSURL? {
         val url = authentication.getAuthorizationUrl()
         val iosUrl = IOSURL.URLWithString(url.toString())
@@ -45,4 +48,7 @@ class AuthKoinHelper : KoinComponent {
     @Throws(Throwable::class)
     suspend fun authenticate(clientSecret: String, code: String, redirectUrlPath: String) =
         authentication.authenticate(clientSecret, code, redirectUrlPath)
+
+    @Throws(Throwable::class)
+    suspend fun logout() = authentication.logout()
 }

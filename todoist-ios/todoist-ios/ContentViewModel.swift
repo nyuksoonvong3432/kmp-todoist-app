@@ -21,10 +21,17 @@ extension ContentView {
         @MainActor
         func getTasks() async throws {
             self.tasks = try await TaskKoinHelper().getAll()
+            print(self.tasks)
         }
         
         func onTaskCreated(_ task: TaskEntityDTO) {
-            self.tasks.insert(task, at: 0)
+            self.tasks.append(task)
+        }
+        
+        @MainActor
+        func tryRestoreAccess() async throws {
+            try await AuthKoinHelper().tryRestoreAccess()
+            self.isLoggedIn = true 
         }
         
         @MainActor
@@ -35,6 +42,12 @@ extension ContentView {
                 redirectUrlPath: "com.example.todoist-ios://authorization"
             )
             self.isLoggedIn = true 
+        }
+        
+        @MainActor
+        func logout() async throws {
+            try await AuthKoinHelper().logout()
+            self.isLoggedIn = false
         }
     }
 }

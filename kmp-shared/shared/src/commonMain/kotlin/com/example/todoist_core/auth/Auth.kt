@@ -1,5 +1,7 @@
 package com.example.todoist_core.auth
 
+import com.example.todoist_core.cache.CacheContainerKey
+import com.example.todoist_core.cache.getCacheContainer
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -23,6 +25,10 @@ class Authentication {
         private set
     var accessTokenType: String? = null
         private set
+
+    suspend fun tryRestoreAccess() {
+        loadTokenFromCache()
+    }
 
     fun getAuthorizationUrl(): Url {
         return Url("$baseOAuthUrl/authorize?client_id=$clientID&scope=data:delete,data:read_write&state=asdasndakj")
@@ -56,5 +62,33 @@ class Authentication {
             }.body()
         this.accessToken = result.accessToken
         this.accessTokenType = result.tokenType
+        saveTokenInCache("${result.tokenType} ${result.accessToken}")
+    }
+
+    suspend fun logout() {
+        clearTokenFromCache()
+        this.accessToken = null
+        this.accessTokenType = null
+    }
+
+    private suspend fun saveTokenInCache(token: String) {
+        getCacheContainer().write(CacheContainerKey.ACCESS_TOKEN, token)
+    }
+
+    private suspend fun loadTokenFromCache() {
+        val result: String = getCacheContainer().read(CacheContainerKey.ACCESS_TOKEN)
+            ?: return
+
+        val splitted = result.split(" ")
+        val tokenType = splitted.getOrNull(0)
+        val token = splitted.getOrNull(1)
+        if (tokenType != null && token != null) {
+            this.accessToken = token
+            this.accessTokenType = tokenType
+        }
+    }
+
+    private suspend fun clearTokenFromCache() {
+        getCacheContainer().remove(CacheContainerKey.ACCESS_TOKEN)
     }
 }

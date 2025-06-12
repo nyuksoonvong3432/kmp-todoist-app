@@ -20,5 +20,7 @@ data class TaskEntityDTO(
     @SerialName("project_id")
     val projectId: String,
     val description: String,
-    val content: String
+    val content: String,
+    @SerialName("added_at")
+    val addedAt: String
 )
