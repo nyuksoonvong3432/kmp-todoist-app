@@ -43,6 +43,6 @@ class AuthKoinHelper : KoinComponent {
     }
 
     @Throws(Throwable::class)
-    suspend fun authenticate(state: String, code: String, redirectUrlPath: String) =
-        authentication.authenticate(state, code, redirectUrlPath)
+    suspend fun authenticate(clientSecret: String, code: String, redirectUrlPath: String) =
+        authentication.authenticate(clientSecret, code, redirectUrlPath)
 }

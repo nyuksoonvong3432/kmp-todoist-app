@@ -7,18 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		EE3349D52DFAA68900AEE9C4 /* TodoistCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEC85C842DFA7B3200F58E75 /* TodoistCore.xcframework */; };
-		EE3349D62DFAA68900AEE9C4 /* TodoistCore.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = EEC85C842DFA7B3200F58E75 /* TodoistCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		EE3349E32DFAB30E00AEE9C4 /* TodoistCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEC85C842DFA7B3200F58E75 /* TodoistCore.xcframework */; };
+		EE3349E42DFAB30E00AEE9C4 /* TodoistCore.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = EEC85C842DFA7B3200F58E75 /* TodoistCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		EE3349D72DFAA68900AEE9C4 /* Embed Frameworks */ = {
+		EE3349E52DFAB30E00AEE9C4 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				EE3349D62DFAA68900AEE9C4 /* TodoistCore.xcframework in Embed Frameworks */,
+				EE3349E42DFAB30E00AEE9C4 /* TodoistCore.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -57,7 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE3349D52DFAA68900AEE9C4 /* TodoistCore.xcframework in Frameworks */,
+				EE3349E32DFAB30E00AEE9C4 /* TodoistCore.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,7 +100,7 @@
 				EEC85C5D2DFA797E00F58E75 /* Sources */,
 				EEC85C5E2DFA797E00F58E75 /* Frameworks */,
 				EEC85C5F2DFA797E00F58E75 /* Resources */,
-				EE3349D72DFAA68900AEE9C4 /* Embed Frameworks */,
+				EE3349E52DFAB30E00AEE9C4 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

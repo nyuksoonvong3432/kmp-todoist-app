@@ -39,6 +39,8 @@ extension FormView {
             if content.isEmpty {
                 error = "Content can't be empty"
                 return false
+            } else {
+                error = nil 
             }
             return true
         }

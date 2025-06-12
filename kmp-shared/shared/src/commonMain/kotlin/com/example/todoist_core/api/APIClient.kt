@@ -13,14 +13,14 @@ import io.ktor.client.request.headers
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
 import io.ktor.http.Parameters
 import io.ktor.http.Url
+import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import kotlin.concurrent.Volatile
 
 class APIClient(val authentication: Authentication) {
     val baseUrl: Url = Url(urlString = "https://api.todoist.com/api/v1")
@@ -28,7 +28,7 @@ class APIClient(val authentication: Authentication) {
     val httpClient = HttpClient {
         install(Logging) {
             logger = Logger.DEFAULT
-            level = LogLevel.HEADERS
+            level = LogLevel.ALL
         }
         install(ContentNegotiation) {
             json(Json {
@@ -47,6 +47,7 @@ class APIClient(val authentication: Authentication) {
                     append("Authorization", token)
                 }
             }
+            contentType(ContentType.Application.Json)
             setBody(body)
         }
         if (!response.status.isSuccess()) {
@@ -65,6 +66,7 @@ class APIClient(val authentication: Authentication) {
                     append("Authorization", token)
                 }
             }
+            contentType(ContentType.Application.Json)
             parameters?.forEach { key, values ->
                 values.forEach { value ->
                     parameter(key, value)

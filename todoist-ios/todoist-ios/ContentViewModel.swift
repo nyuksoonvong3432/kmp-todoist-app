@@ -11,6 +11,7 @@ import TodoistCore
 extension ContentView {
     final class ViewModel: ObservableObject {
     
+        @Published private(set) var isLoggedIn = false 
         @Published private(set) var tasks = [TaskEntityDTO]()
         
         func getAuthorizationURL() -> URL? {
@@ -23,6 +24,15 @@ extension ContentView {
         
         func onTaskCreated(_ task: TaskEntityDTO) {
             self.tasks.insert(task, at: 0)
+        }
+        
+        func authenticate(clientSecret: String, code: String) async throws {
+            try await AuthKoinHelper().authenticate(
+                clientSecret: clientSecret,
+                code: code,
+                redirectUrlPath: "com.example.todoist-ios://authorization"
+            )
+            self.isLoggedIn = true 
         }
     }
 }

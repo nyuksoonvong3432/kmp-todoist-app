@@ -9,7 +9,9 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
 import io.ktor.http.Url
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -27,7 +29,7 @@ class Authentication {
     }
 
     @Throws(Throwable::class)
-    suspend fun authenticate(state: String, code: String, redirectUrlPath: String) {
+    suspend fun authenticate(clientSecret: String, code: String, redirectUrlPath: String) {
         val httpClient = HttpClient() {
             install(Logging) {
                 logger = Logger.DEFAULT
@@ -41,11 +43,12 @@ class Authentication {
             }
         }
         val result: AuthAuthenticatedResponseDTO =
-            httpClient.post(urlString = "$baseOAuthUrl/accessToken") {
+            httpClient.post(urlString = "$baseOAuthUrl/access_token") {
+                contentType(ContentType.Application.Json)
                 setBody(
                     AuthAuthenticatePayloadDTO(
                         clientID = clientID,
-                        clientSecret = state,
+                        clientSecret = clientSecret,
                         code = code,
                         redirectUrlPath
                     )

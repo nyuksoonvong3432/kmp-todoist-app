@@ -16,8 +16,16 @@ struct FormView: View {
     var body: some View {
         VStack {
             ScrollView {
-                TextField("Content", text: $viewModel.content)
-                TextField("Content", text: $viewModel.description)
+                VStack(spacing: 28) {
+                    VStack {
+                        Text("Content")
+                        TextField("Content", text: $viewModel.content)
+                    }
+                    VStack {
+                        Text("Description")
+                        TextField("Description", text: $viewModel.description)
+                    }
+                }
             }
             if let error = viewModel.error {
                 Text(error)
@@ -26,7 +34,7 @@ struct FormView: View {
             Button("Submit") {
                 submit()
             }.disabled(isLoading)
-        }
+        }.padding()
     }
     
     private func submit() {
