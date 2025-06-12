@@ -8,7 +8,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>CFBundleURLName</key>
-			<string>demoapp</string>
+			<string>com.example.todoist-ios</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>authorization</string>
