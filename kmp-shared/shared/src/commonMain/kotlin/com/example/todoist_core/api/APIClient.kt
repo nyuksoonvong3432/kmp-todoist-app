@@ -38,7 +38,6 @@ class APIClient(val authentication: Authentication) {
         }
     }
 
-    @Throws(Throwable::class)
     suspend inline fun <reified Body, reified Result> post(baseUrl: Url? = null, path: String, body: Body? = null): Result {
         val response = httpClient.post("${baseUrl ?: this.baseUrl}$path") {
             headers {
@@ -57,7 +56,6 @@ class APIClient(val authentication: Authentication) {
         return response.body()
     }
 
-    @Throws(Throwable::class)
     suspend inline fun <reified Result> get(baseUrl: Url? = null, path: String, parameters: Parameters? = null): Result {
         val response = httpClient.get("${baseUrl ?: this.baseUrl}$path") {
             headers {

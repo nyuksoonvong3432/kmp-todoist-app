@@ -34,7 +34,6 @@ class Authentication {
         return Url("$baseOAuthUrl/authorize?client_id=$clientID&scope=data:delete,data:read_write&state=asdasndakj")
     }
 
-    @Throws(Throwable::class)
     suspend fun authenticate(clientSecret: String, code: String, redirectUrlPath: String) {
         val httpClient = HttpClient() {
             install(Logging) {

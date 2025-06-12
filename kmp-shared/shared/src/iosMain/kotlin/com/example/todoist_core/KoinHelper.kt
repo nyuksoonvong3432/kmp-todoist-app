@@ -9,7 +9,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
-import platform.Foundation.NSURL as IOSURL
+import platform.Foundation.NSURL as IosURL
 
 class KoinHelper : KoinComponent {
     fun initKoin() {
@@ -39,9 +39,9 @@ class AuthKoinHelper : KoinComponent {
     @Throws(Throwable::class)
     suspend fun tryRestoreAccess() = authentication.tryRestoreAccess()
 
-    fun getAuthorizationUrl(): IOSURL? {
+    fun getAuthorizationUrl(): IosURL? {
         val url = authentication.getAuthorizationUrl()
-        val iosUrl = IOSURL.URLWithString(url.toString())
+        val iosUrl = IosURL.URLWithString(url.toString())
         return iosUrl
     }
 
