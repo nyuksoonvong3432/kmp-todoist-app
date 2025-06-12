@@ -41,11 +41,13 @@ kotlin {
             implementation(libs.ktor.client.serialization)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.client.logging)
+            implementation(libs.kotlin.koin.core)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
             // TODO: Check if this is correct
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.kotlin.koin.android)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

@@ -1,22 +1,20 @@
 package com.example.todoist_core.auth
 
-import com.example.todoist_core.api.APIClient
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.DEFAULT
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.Url
-import io.ktor.utils.io.locks.synchronized
-import kotlin.concurrent.Volatile
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 
-final class Authentication private constructor() {
-
-    companion object {
-        val instance: Authentication by lazy { Authentication() }
-    }
-
+class Authentication {
     private val baseOAuthUrl = "https://todoist.com/oauth"
-    private val api = APIClient.instance
     private val clientID = "19530b5a25ff4321ad889abc37bc7134"
 
     var accessToken: String? = null
@@ -24,26 +22,36 @@ final class Authentication private constructor() {
     var accessTokenType: String? = null
         private set
 
-    fun setAccessToken(token: String, tokenType: String) {
-        this.accessToken = token
-        this.accessTokenType = tokenType
-    }
-
     fun getAuthorizationUrl(): Url {
         return Url("$baseOAuthUrl/authorize?client_id=$clientID&scope=data:read,data:delete&state=asdasndakj")
     }
 
+    @Throws(Throwable::class)
     suspend fun authenticate(state: String, code: String, redirectUrlPath: String) {
-        val result: AuthAuthenticatedResponseDTO = api.post(
-            baseUrl = Url(urlString = baseOAuthUrl),
-            path = "/access_token",
-            body = AuthAuthenticatePayloadDTO(
-                clientID = clientID,
-                clientSecret = state,
-                code = code,
-                redirectUrlPath
-            ),
-        )
-        this.setAccessToken(result.accessToken, result.tokenType)
+        val httpClient = HttpClient() {
+            install(Logging) {
+                logger = Logger.DEFAULT
+                level = LogLevel.HEADERS
+            }
+            install(ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                    useAlternativeNames = false
+                })
+            }
+        }
+        val result: AuthAuthenticatedResponseDTO =
+            httpClient.post(urlString = "$baseOAuthUrl/accessToken") {
+                setBody(
+                    AuthAuthenticatePayloadDTO(
+                        clientID = clientID,
+                        clientSecret = state,
+                        code = code,
+                        redirectUrlPath
+                    )
+                )
+            }.body()
+        this.accessToken = result.accessToken
+        this.accessTokenType = result.tokenType
     }
 }

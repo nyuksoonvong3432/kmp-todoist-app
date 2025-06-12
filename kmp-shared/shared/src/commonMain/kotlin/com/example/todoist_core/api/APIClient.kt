@@ -14,13 +14,15 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.Parameters
 import io.ktor.http.Url
+import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import kotlin.concurrent.Volatile
 
-class APIClient private constructor() {
+class APIClient(val authentication: Authentication) {
     val baseUrl: Url = Url(urlString = "https://api.todoist.com/api/v1")
 
     val httpClient = HttpClient {
@@ -35,14 +37,10 @@ class APIClient private constructor() {
             })
         }
     }
-    val authentication = Authentication.instance
 
-    companion object {
-        val instance: APIClient by lazy { APIClient() }
-    }
-
+    @Throws(Throwable::class)
     suspend inline fun <reified Body, reified Result> post(baseUrl: Url? = null, path: String, body: Body? = null): Result {
-        val response = httpClient.post("${baseUrl ?: this.baseUrl}/$path") {
+        val response = httpClient.post("${baseUrl ?: this.baseUrl}$path") {
             headers {
                 if (authentication.accessTokenType != null && authentication.accessToken != null) {
                     val token = "${authentication.accessTokenType} ${authentication.accessToken}"
@@ -51,11 +49,16 @@ class APIClient private constructor() {
             }
             setBody(body)
         }
+        if (!response.status.isSuccess()) {
+            val errorBody = response.bodyAsText()
+            throw Exception("HTTP ${response.status.value}: $errorBody")
+        }
         return response.body()
     }
 
+    @Throws(Throwable::class)
     suspend inline fun <reified Result> get(baseUrl: Url? = null, path: String, parameters: Parameters? = null): Result {
-        val response = httpClient.get("${baseUrl ?: this.baseUrl}/$path") {
+        val response = httpClient.get("${baseUrl ?: this.baseUrl}$path") {
             headers {
                 if (authentication.accessTokenType != null && authentication.accessToken != null) {
                     val token = "${authentication.accessTokenType} ${authentication.accessToken}"
@@ -67,6 +70,10 @@ class APIClient private constructor() {
                     parameter(key, value)
                 }
             }
+        }
+        if (!response.status.isSuccess()) {
+            val errorBody = response.bodyAsText()
+            throw Exception("HTTP ${response.status.value}: $errorBody")
         }
         return response.body()
     }

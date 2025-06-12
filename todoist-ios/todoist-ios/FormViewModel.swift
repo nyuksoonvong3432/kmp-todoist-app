@@ -10,9 +10,6 @@ import TodoistCore
 
 extension FormView {
     final class ViewModel: ObservableObject {
-        
-        private let taskService = Tasks.companion.instance
-        
         @Published var content = "" {
             didSet {
                 self.validate()
@@ -27,7 +24,7 @@ extension FormView {
         
         func submit() async throws -> TaskEntityDTO? {
             guard validate() else { return nil }
-            let created = try await taskService.create(
+            let created = try await TaskKoinHelper().create(
                 payload: .init(
                     content: content,
                     description: description.isEmpty ? nil : description,

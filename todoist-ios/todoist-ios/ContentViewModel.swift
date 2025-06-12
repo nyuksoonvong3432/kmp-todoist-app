@@ -10,19 +10,15 @@ import TodoistCore
 
 extension ContentView {
     final class ViewModel: ObservableObject {
-        
-        private let authService = Authentication.companion.instance
-        private let taskService = Tasks.companion.instance
-
+    
         @Published private(set) var tasks = [TaskEntityDTO]()
         
         func getAuthorizationURL() -> URL? {
-            let path = authService.getAuthorizationUrl().encodedPath
-            return URL(string: path)
+            return AuthKoinHelper().getAuthorizationUrl()
         }
         
         func getTasks() async throws {
-            self.tasks = try await taskService.getAll()
+            self.tasks = try await TaskKoinHelper().getAll()
         }
         
         func onTaskCreated(_ task: TaskEntityDTO) {

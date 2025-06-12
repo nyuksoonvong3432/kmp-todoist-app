@@ -17,46 +17,50 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             List {
+                Button("Grant access") {
+                    guard let authorizationURL = viewModel.getAuthorizationURL() else { return }
+                    UIApplication.shared.open(authorizationURL, options: [:], completionHandler: nil)
+                }
                 ForEach(viewModel.tasks, id: \.self) { task in
                     VStack {
                         Text(task.content)
                         Text(task.description())
                     }
                 }
-            }.task {
-                await loadData()
-            }
-            .alert(
-                "Something went wrong.",
-                isPresented: .init(
-                    get: { error != nil },
-                    set: { _ in error = nil }
-                ),
-                actions: {
-                    Button("OK") {
-                        error = nil
-                    }
-                },
-                message: {
-                    Text(error ?? "-")
+            }.padding()
+                .task {
+                    await loadData()
                 }
-            )
-            .padding()
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("", systemImage: "plus.app.fill") {
-                        self.showingCreateForm = true
-                    }
-                }
-            }
-            .sheet(isPresented: $showingCreateForm) {
-                FormView(
-                    onCreated: { created in
-                        viewModel.onTaskCreated(created)
-                        self.showingCreateForm = false
+                .alert(
+                    "Something went wrong.",
+                    isPresented: .init(
+                        get: { error != nil },
+                        set: { _ in error = nil }
+                    ),
+                    actions: {
+                        Button("OK") {
+                            error = nil
+                        }
+                    },
+                    message: {
+                        Text(error ?? "-")
                     }
                 )
-            }
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("", systemImage: "plus.app.fill") {
+                            self.showingCreateForm = true
+                        }
+                    }
+                }
+                .sheet(isPresented: $showingCreateForm) {
+                    FormView(
+                        onCreated: { created in
+                            viewModel.onTaskCreated(created)
+                            self.showingCreateForm = false
+                        }
+                    )
+                }
         }
     }
     
