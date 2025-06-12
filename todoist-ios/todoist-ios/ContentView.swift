@@ -14,7 +14,14 @@ struct ContentView: View {
     @State private var showingCreateForm = false
     @State private var error: String?
     @State private var isLoading = false
-    private let isoDateFormatter = ISO8601DateFormatter()
+    
+    private var dateFormmater: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'"
+        return formatter
+    }
     
     var body: some View {
         NavigationStack {
@@ -112,7 +119,7 @@ struct ContentView: View {
     }
     
     private func parseDate(str: String) -> Date? {
-        isoDateFormatter.date(from: str)
+        dateFormmater.date(from: str)
     }
     
     private func loadData() async {
