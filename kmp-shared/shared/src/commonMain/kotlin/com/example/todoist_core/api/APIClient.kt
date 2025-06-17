@@ -36,16 +36,16 @@ class APIClient(val authentication: Authentication) {
                 useAlternativeNames = false
             })
         }
+        install(TodoistAuthHeaderPlugin) {
+            if (authentication.accessTokenType != null && authentication.accessToken != null) {
+                accessTokenType = authentication.accessTokenType!!
+                accessToken = authentication.accessToken!!
+            }
+        }
     }
 
     suspend inline fun <reified Body, reified Result> post(baseUrl: Url? = null, path: String, body: Body? = null): Result {
         val response = httpClient.post("${baseUrl ?: this.baseUrl}$path") {
-            headers {
-                if (authentication.accessTokenType != null && authentication.accessToken != null) {
-                    val token = "${authentication.accessTokenType} ${authentication.accessToken}"
-                    append("Authorization", token)
-                }
-            }
             contentType(ContentType.Application.Json)
             setBody(body)
         }
@@ -58,12 +58,6 @@ class APIClient(val authentication: Authentication) {
 
     suspend inline fun <reified Result> get(baseUrl: Url? = null, path: String, parameters: Parameters? = null): Result {
         val response = httpClient.get("${baseUrl ?: this.baseUrl}$path") {
-            headers {
-                if (authentication.accessTokenType != null && authentication.accessToken != null) {
-                    val token = "${authentication.accessTokenType} ${authentication.accessToken}"
-                    append("Authorization", token)
-                }
-            }
             contentType(ContentType.Application.Json)
             parameters?.forEach { key, values ->
                 values.forEach { value ->

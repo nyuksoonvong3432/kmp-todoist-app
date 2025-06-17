@@ -28,6 +28,9 @@ class Authentication {
 
     suspend fun tryRestoreAccess() {
         loadTokenFromCache()
+        if (accessToken == null || accessTokenType == null) {
+            throw Exception("No token found.")
+        }
     }
 
     fun getAuthorizationUrl(): Url {
