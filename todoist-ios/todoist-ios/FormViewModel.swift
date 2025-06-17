@@ -24,6 +24,7 @@ extension FormView {
         }
         @Published var error: String?
         
+        @MainActor
         func submit() async throws -> TaskEntityDTO? {
             guard validate() else { return nil }
             let created = try await TaskKoinHelper().create(

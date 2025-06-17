@@ -126,7 +126,7 @@ struct ContentView: View {
         defer { self.isLoading = false }
         do {
             self.isLoading = true
-            try await viewModel.tryRestoreAccess()
+            try? await viewModel.tryRestoreAccess()
             guard viewModel.isLoggedIn else { return }
             try await viewModel.getTasks()
         } catch {
