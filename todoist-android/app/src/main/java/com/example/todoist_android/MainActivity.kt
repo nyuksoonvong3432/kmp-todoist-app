@@ -1,5 +1,6 @@
 package com.example.todoist_android
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -15,18 +16,29 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.todoist_android.ui.theme.TodoistandroidTheme
 import com.example.todoist_core.AuthKoinHelper
 import com.example.todoist_core.KoinHelper
+import com.example.todoist_core.TaskKoinHelper
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.util.Properties
 
 class MainActivity : ComponentActivity() {
 
     val authKoinHelper = AuthKoinHelper()
+    val taskKoinHelper = TaskKoinHelper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        KoinHelper().initKoin()
+        try {
+            KoinHelper().initKoin()
+        } catch(e: Exception) {
+            print("Koin already started")
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -34,8 +46,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column {
                         Greeting(
-                            name = "Android",
-                            modifier = Modifier.padding(innerPadding)
+                            name = "Android", modifier = Modifier.padding(innerPadding)
                         )
                         Row {
                             Image(
@@ -43,20 +54,59 @@ class MainActivity : ComponentActivity() {
                                 contentDescription = "Some image"
                             )
                         }
-                        Button(onClick = { onGrantAccessBtnTapped() }) {
+
+                        val uriHandler = LocalUriHandler.current
+                        Button(onClick = { onGrantAccessBtnTapped(uriHandler) }) {
                             Text("Grant access")
                         }
                     }
                 }
             }
         }
+        handleDeepLink(intent)
     }
 
-    private fun onGrantAccessBtnTapped() {
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleDeepLink(intent)
+    }
+
+    private fun handleDeepLink(intent: Intent) {
+        println("Handle deeplink")
+        if (intent.action == Intent.ACTION_VIEW) {
+            intent.data?.let { uri ->
+                val scheme = uri.scheme
+                val code = uri.getQueryParameter("code")
+                if (scheme != "todoist-app" || code == null) {
+                    return
+                }
+                val clientSecret = BuildConfig.todoistClientSecret
+                runBlocking {
+                    authKoinHelper.authenticate(
+                        clientSecret = clientSecret,
+                        code = code,
+                        redirectUrlPath = "com.example.todoist-ios://authorization"
+                    )
+                    loadTasks()
+                }
+            }
+        }
+    }
+
+    private suspend fun loadTasks() {
+        try {
+            val tasks = taskKoinHelper.getAll()
+            print(tasks)
+        } catch (e: Throwable) {
+            Toast.makeText(this, "Failed to load tasks: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun onGrantAccessBtnTapped(uriHandler: UriHandler) {
         try {
             val authorizationUrl = authKoinHelper.getAuthorizationUrl()
-            Toast.makeText(this, "URL: $authorizationUrl", Toast.LENGTH_SHORT).show()
-        } catch(e: Throwable) {
+            uriHandler.openUri(authorizationUrl.toString())
+        } catch (e: Throwable) {
             Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
         }
     }
@@ -65,8 +115,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
-        modifier = modifier
+        text = "Hello $name!", modifier = modifier
     )
 }
 
