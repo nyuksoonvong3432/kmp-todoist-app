@@ -58,5 +58,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(files("libs/shared-release.aar"))
+    implementation(libs.ktor.client.core)
     implementation(libs.kotlin.koin.android)
 }
