@@ -6,6 +6,16 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinxSerialization)
+    id("maven-publish")
+}
+
+group = "com.example.todoist_core"
+version = "0.1"
+
+publishing {
+    repositories {
+        mavenLocal()
+    }
 }
 
 kotlin {
@@ -17,6 +27,7 @@ kotlin {
                 }
             }
         }
+        publishLibraryVariants("release")
     }
     
     val xcf = XCFramework(xcFrameworkName = "TodoistCore")
