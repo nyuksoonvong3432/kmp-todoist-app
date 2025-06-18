@@ -5,11 +5,11 @@ import com.example.todoist_core.auth.Authentication
 import com.example.todoist_core.task.TaskCreatePayloadDTO
 import com.example.todoist_core.task.TaskEntityDTO
 import com.example.todoist_core.task.Tasks
-import io.ktor.http.Url
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
+import java.net.URL
 
 class KoinHelper : KoinComponent {
     fun initKoin() {
@@ -39,8 +39,10 @@ class AuthKoinHelper : KoinComponent {
     @Throws(Throwable::class)
     suspend fun tryRestoreAccess() = authentication.tryRestoreAccess()
 
-    fun getAuthorizationUrl(): Url {
-        return authentication.getAuthorizationUrl()
+    @Throws(Throwable::class)
+    fun getAuthorizationUrl(): URL {
+        val url = URL(authentication.getAuthorizationUrl().toString())
+        return url
     }
 
     @Throws(Throwable::class)

@@ -66,6 +66,9 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
+        androidUnitTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
     }
 }
 
@@ -74,6 +77,7 @@ android {
     compileSdk = 35
     defaultConfig {
         minSdk = 24
+        testInstrumentationRunner = "androidInstrumentedTest.test.InstrumentationTestRunner"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

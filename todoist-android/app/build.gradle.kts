@@ -56,5 +56,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
     implementation(files("libs/shared-release.aar"))
+    implementation(libs.kotlin.koin.android)
 }
