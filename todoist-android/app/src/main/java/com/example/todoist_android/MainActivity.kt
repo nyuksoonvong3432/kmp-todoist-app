@@ -24,12 +24,9 @@ import com.example.todoist_android.ui.theme.TodoistandroidTheme
 import com.example.todoist_core.AuthKoinHelper
 import com.example.todoist_core.KoinHelper
 import com.example.todoist_core.TaskKoinHelper
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.util.Properties
 
 class MainActivity : ComponentActivity() {
-
     val authKoinHelper = AuthKoinHelper()
     val taskKoinHelper = TaskKoinHelper()
 
@@ -96,7 +93,7 @@ class MainActivity : ComponentActivity() {
     private suspend fun loadTasks() {
         try {
             val tasks = taskKoinHelper.getAll()
-            print(tasks)
+            print("loaded tasks: $tasks")
         } catch (e: Throwable) {
             Toast.makeText(this, "Failed to load tasks: ${e.message}", Toast.LENGTH_SHORT).show()
         }

@@ -13,6 +13,17 @@ group = "com.example.todoist_core"
 version = "0.1"
 
 publishing {
+    publications {
+        // This creates a publication for the Android AAR
+        create<MavenPublication>("release") {
+            groupId = "com.example"
+            artifactId = "todoist_core"
+            version = "0.0.1"
+            afterEvaluate {
+                from(components["kotlin"])
+            }
+        }
+    }
     repositories {
         mavenLocal()
     }

@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
+import org.jetbrains.kotlin.ir.backend.js.compile
 import java.util.Properties
 
 plugins {
@@ -64,13 +65,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(files("libs/shared-release.aar"))
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.okhttp)
     implementation(libs.kotlin.koin.android)
-    implementation(libs.ktor.client.serialization)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.client.logging)
+    implementation(libs.todoist.core) {
+        isTransitive = true
+    }
 }
 
 fun Project.loadLocalProperty(path: String, propertyName: String): String {
